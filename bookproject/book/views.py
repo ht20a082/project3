@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.urls import reverse, reverse_lazy
 from django.views.generic import (
@@ -10,7 +11,7 @@ from django.views.generic import (
 from .models import Book, Review
 
 
-class ListBookView(ListView):
+class ListBookView(LoginRequiredMixin, ListView):
   template_name = 'book/book_list.html'
   model = Book
 
