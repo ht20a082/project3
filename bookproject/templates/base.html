@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,6 +12,7 @@
     integrity="sha384-+4j30LffJ4tgIMrq9CwHvn0NjEvmuDCOfk6Rpg2xg7zgOxWWtLtozDEEVvBPgHqE" crossorigin="anonymous">
 
   <title>{% block title %}{% endblock title %}| 本棚アプリ</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'book/css/style.css' %}">
 </head>
 
 <body>
