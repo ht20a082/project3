@@ -15,22 +15,22 @@ class ListBookView(LoginRequiredMixin, ListView):
   template_name = 'book/book_list.html'
   model = Book
 
-class DetailBookView(DetailView):
+class DetailBookView(LoginRequiredMixin, DetailView):
   template_name = 'book/book_detail.html'
   model = Book
 
-class CreateBookView(CreateView):
+class CreateBookView(LoginRequiredMixin, CreateView):
   template_name = 'book/book_create.html'
   model = Book
   fields = {'title', 'text', 'category', 'thumbnail'}
   success_url = reverse_lazy('list-book')
 
-class DeleteBookView(DeleteView):
+class DeleteBookView(LoginRequiredMixin, DeleteView):
   template_name ='book/book_confirm_delete.html'
   model = Book
   success_url = reverse_lazy('list-book')
 
-class UpdateBookView(UpdateView):
+class UpdateBookView(LoginRequiredMixin, UpdateView):
   model = Book
   fields = ('title', 'text', 'category', 'thumbnail')
   template_name = 'book/book_update.html'
@@ -40,7 +40,7 @@ def index_view(request):
   object_list = Book.objects.order_by('category')
   return render(request, 'book/index.html',{'object_list': object_list})
 
-class CreateReview(CreateView):
+class CreateReview(LoginRequiredMixin, CreateView):
   model = Review
   fields = ('book', 'title', 'text', 'rate')
   template_name = 'book/review_form.html'
