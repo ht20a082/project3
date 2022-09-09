@@ -10,6 +10,7 @@ from django.views.generic import (
   UpdateView,
 )
 from .models import Book, Review
+from django.db.models import Avg
 
 
 class ListBookView(LoginRequiredMixin, ListView):
@@ -26,8 +27,8 @@ class CreateBookView(LoginRequiredMixin, CreateView):
   fields = {'title', 'text', 'category', 'thumbnail'}
   success_url = reverse_lazy('list-book')
 
-  def form_volid(self, form):
-    form.instance.user =self.request.user
+  def form_valid(self, form):
+    form.instance.user = self.request.user
 
     return super().form_valid(form)
 
@@ -61,8 +62,9 @@ class UpdateBookView(LoginRequiredMixin, UpdateView):
     return reverse('detail-book', kwargs={'pk': self.object.id})
 
 def index_view(request):
-  object_list = Book.objects.order_by('category')
-  return render(request, 'book/index.html',{'object_list': object_list})
+  object_list = Book.objects.order_by('id')
+  ranking_list = Book.objects.annotate(avg_rating=Avg('review__rate')).order_by('-avg_rating')
+  return render(request, 'book/index.html',{'object_list': object_list, 'ranking_list': ranking_list})
 
 class CreateReview(LoginRequiredMixin, CreateView):
   model = Review
