@@ -11,6 +11,9 @@ from django.views.generic import (
 )
 from .models import Book, Review
 from django.db.models import Avg
+from django.core.paginator import Paginator
+
+from .consts import ITEM_PER_PAGE
 
 
 class ListBookView(LoginRequiredMixin, ListView):
@@ -64,7 +67,15 @@ class UpdateBookView(LoginRequiredMixin, UpdateView):
 def index_view(request):
   object_list = Book.objects.order_by('id')
   ranking_list = Book.objects.annotate(avg_rating=Avg('review__rate')).order_by('-avg_rating')
-  return render(request, 'book/index.html',{'object_list': object_list, 'ranking_list': ranking_list})
+
+  paginator = Paginator(ranking_list, ITEM_PER_PAGE)
+  page_number = request.GET.get('page', 1)
+  page_obj = paginator.page(page_number)
+
+  #query = request.GET['number']
+  #print(query)
+
+  return render(request, 'book/index.html',{'object_list': object_list, 'ranking_list': ranking_list, 'page_ogj': page_obj})
 
 class CreateReview(LoginRequiredMixin, CreateView):
   model = Review
